@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     private Rigidbody2D rb;
     public float moveSpeed;
+    public float moveForce = 3f;
+    public float maxSpeed = 10f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -16,12 +19,20 @@ public class PlayerMovement : MonoBehaviour
         float hor = Input.GetAxisRaw("Horizontal");
         //float ver = Input.GetAxisRaw("Vertical");
 
-        rb.linearVelocity = new Vector2(hor * moveSpeed,rb.linearVelocity.y);
+        //rb.linearVelocity += new Vector2(hor * moveSpeed,0);
+        if (Math.Abs(hor) > 0f)
+        {
+            if (Math.Abs(rb.linearVelocity.x) < maxSpeed)
+            {
+                rb.AddForce(new Vector2(hor,0) * moveForce);
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Space) && Grounded()) 
         {
             rb.AddForce(Vector2.up * 10f, ForceMode2D.Impulse);
         }
+        
 
     }
     private bool Grounded()
